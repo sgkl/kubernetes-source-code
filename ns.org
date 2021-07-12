@@ -1,0 +1,8 @@
++ Namespaces cannot be nested inside one another and each Kubernetes resource can only be in one namespace.
++ Most Kubernetes resources(e.g. pods, services, replication controllers, and others) are in some namespaces. However namespace resources are not themselves in a namespace. And low-level resources, such as nodes and persistentVolumes, are not in any namespace.
++ To see which Kubernetes resources are and are't in a namespace:
+#+BEGIN_SRC bash
+kubectl api-resources --namespaced=true
+
+kubectl api-resources --namespaced=false
+#+END_SRC

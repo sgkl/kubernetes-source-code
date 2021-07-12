@@ -1,0 +1,43 @@
+
+
+
+* 问题
+** 不能attach到容器中
++ 执行容器的attach容器，报找不到容器的错误
+#+BEGIN_SRC 
+$ kubectl exec -it ovs-node-7rlbl -n ovn-kubernetes
+error: you must specify at least one command for the container
+#+END_SRC
+
++ 查看node
+#+BEGIN_SRC 
+$ kubectl get nodes -o wide
+NAME          STATUS   ROLES                  AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION    CONTAINER-RUNTIME
+k8s-worker1   Ready    <none>                 21h   v1.20.8   172.17.0.1    <none>        Debian GNU/Linux 10 (buster)   4.19.0-16-amd64   docker://20.10.6
+k8s-worker2   Ready    <none>                 21h   v1.20.8   172.17.0.1    <none>        Debian GNU/Linux 10 (buster)   4.19.0-16-amd64   docker://20.10.6
+sgk-master    Ready    control-plane,master   21h   v1.20.8   172.17.0.1    <none>        Debian GNU/Linux 10 (buster)   4.19.0-16-amd64   docker://20.10.6
+#+END_SRC
+各个节点的node的ip地址与实际的不符，实际的ip地址是192.168.200.180-182，此处的ip地址是节点上docker网络的网关ip. 问题在于kubeadm在将节点添加入集群时选择了错误的ip地址，因此导致kubectl不能正常工作。
+
++ 解决办法
+在所以节点（包括master节点）在10-kubeadm.conf中指定node的ip地址，文件路径是/etc/systemd/system/kubelet.service.d/10-kubeadm.conf，添加
+#+BEGIN_SRC 
+Environment="KUBELET_EXTRA_ARGS=--node-ip=<各自节点的 IP>"
+#+END_SRC
+
+然后重启kubelet服务:
+#+BEGIN_SRC 
+# systemctl daemon-reload
+# systemctl restart kubelet
+#+END_SRC
+
++ 查看node节点
+#+BEGIN_SRC 
+$ kubectl get nodes -o wide
+NAME          STATUS   ROLES                  AGE   VERSION   INTERNAL-IP       EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION    CONTAINER-RUNTIME
+k8s-worker1   Ready    <none>                 22h   v1.20.8   192.168.200.181   <none>        Debian GNU/Linux 10 (buster)   4.19.0-16-amd64   docker://20.10.6
+k8s-worker2   Ready    <none>                 22h   v1.20.8   192.168.200.182   <none>        Debian GNU/Linux 10 (buster)   4.19.0-16-amd64   docker://20.10.6
+sgk-master    Ready    control-plane,master   22h   v1.20.8   192.168.200.180   <none>        Debian GNU/Linux 10 (buster)   4.19.0-16-amd64   docker://20.10.6
+#+END_SRC
+此时各node ip的地址已经正常
+[[https://yanbin.blog/kubernetes-cluster-internal-ip-issue/#more-10102][参考]]

@@ -1,0 +1,17 @@
+**** 网络栈
+所谓网络栈，包括：网卡（Network Interface）、回环设备（Loopback Device）、路由表（Routing Table）和iptables规则.
+
+*** kubernetes容器网络
+当kubelet组件需要创建Pod的时候，它第一个创建的一定是Infra容器。所以在这一步，dockershim就会先调用Docker API创建并启动Infra容器，紧接着执行一个叫做SetUpPod的方法。这个方法的作用是：为CNI插件准备参数，然后调用CNI插件为Infra容器配置网络。
+
+这里要调用的CNI插件，就是/opt/cni/bin/flannel；而调用它所需要的参数，分为两部分。
+第一部分，是由dokershim设置的一组CNI环境变量。
+其中，最重要的环境变量叫做：CNI_COMMAND。它的取值只有两种：ADD和DEL.
+
+CNI的ADD操作需要的参数包括：容器里网卡的名字eth0（CNI_IFNAME）、Pod的Network Namespace文件的路径（CNI_NETNS）、容器的ID（CNI_CONTAINERID）等。其中，Pod的Network Namespace文件的路径是/proc/<容器进程的PID>/ns/net。
+除此之外，在CNI环境变量里，还有一个叫做CNI_ARGS的参数。通过这个参数，CRI实现就可以以Key-Value的格式，传递自定义信息给网络插件。
+
+第二部分，则是dockershim从CNI配置文件里加载到的、默认插件的配置信息。
+
+这个配置信息在CNI中被叫做Network Configuration，dockershim会把Network Configuration以JSON数据的格式，通过标准输入的方式传递给Flannel CNI插件。
+

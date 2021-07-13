@@ -1,0 +1,10 @@
+{
+    "title": "kubernetes源码阅读笔记",
+    "description": "我在阅读kubernetes源码时的笔记",
+    "author": "sunguanke",
+    "gitbook": "3.2.3",
+    "root": ".",
+    "structure": {
+        "readme": "introduction.md"
+    }
+}

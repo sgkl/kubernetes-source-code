@@ -5,4 +5,6 @@
     * [配置相关](scheduler/配置相关.md)
     * [Cache](scheduler/cache.md)
     * [scheduling_queue](scheduler/scheduling_queue.md)
+    * [extender](scheduler/extender.md)
+    * [configurator](scheduler/configurator.md)
     * [调度器](scheduler/scheduler.md)

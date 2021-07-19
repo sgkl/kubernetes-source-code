@@ -6,5 +6,9 @@
     "root": ".",
     "structure": {
         "readme": "introduction.md"
-    }
+    },
+    "plugins": [
+        "page-treeview",
+        "emphasize"
+    ]
 }

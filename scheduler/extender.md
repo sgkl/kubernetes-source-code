@@ -263,7 +263,7 @@ func (h *HTTPExtender) ProcessPreemption(
 
 #### Filter
 
-Filter过滤掉不能运行pod的node。注，函数返回的filteredList是所有可用node的一个子集。
+Filter过滤掉不能运行pod的node。
 
 ```go
 // Filter based on extender implemented predicate functions. The filtered list is

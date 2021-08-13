@@ -13,3 +13,8 @@
     * [configurator](kube-scheduler/configurator.md)
     * [调度器](kube-scheduler/scheduler.md)
 * [kube-controller-manager](kube-controller-manager/README.md)
+* [kubelet](kubelet/README.md)
+    * [podManager](kubelet/pod.md)
+    * [confirmapManager](kubelet/configmap.md)
+    * [runtimeClassManager](kubelet/runtimeclass.md)
+

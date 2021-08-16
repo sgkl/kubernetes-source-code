@@ -4,6 +4,10 @@
 
 ### 定义
 
+### LessFunc
+
+QueuedPodInfo的比较函数，也是Frame work中QueueSortFunc()函数的返回值
+
 ```go
 // LessFunc is the function to sort pod info
 type LessFunc func(podInfo1, podInfo2 *QueuedPodInfo) bool
